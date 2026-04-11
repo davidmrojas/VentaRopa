@@ -1,16 +1,14 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
-
 package com.juanfedevmaster.manageclient;
 
-/**
- *
- * @author juanfe
- */
-public class ManageClient {
+import com.juanfedevmaster.manageclient.view.MainFrame;
+import javax.swing.SwingUtilities;
 
+public class ManageClient {
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        // Inicia la ventana principal de la aplicacion.
+        SwingUtilities.invokeLater(() -> {
+            MainFrame frame = new MainFrame();
+            frame.setVisible(true);
+        });
     }
 }

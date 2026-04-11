@@ -1,15 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.juanfedevmaster.manageclient.model;
 
-/**
- *
- * @author juanfe
- */
 public class Client {
-    
     private int id;
     private String name;
     private String email;
@@ -56,6 +47,10 @@ public class Client {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
-    
-    
+
+    @Override
+    public String toString() {
+        // Muestra un texto claro en los JComboBox.
+        return name + " - " + email;
+    }
 }

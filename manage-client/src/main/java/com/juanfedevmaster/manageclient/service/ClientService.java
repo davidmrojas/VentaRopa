@@ -1,22 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.juanfedevmaster.manageclient.service;
 
 import com.juanfedevmaster.manageclient.model.Client;
-import com.juanfedevmaster.manageclient.repository.ClientRepository;
 import com.juanfedevmaster.manageclient.repository.IClientRepository;
 import java.util.List;
 
-/**
- *
- * @author juanfe
- */
 public class ClientService {
     private final IClientRepository clientRepository;
 
-    public ClientService(ClientRepository clientRepository) {
+    public ClientService(IClientRepository clientRepository) {
         this.clientRepository = clientRepository;
     }
 
@@ -33,7 +24,41 @@ public class ClientService {
         clientRepository.save(client);
     }
 
+    public void saveClient(Client client) {
+        validateClient(client);
+
+        // Valida el ID antes de guardar para evitar duplicados.
+        if (clientRepository.existsById(client.getId())) {
+            throw new IllegalArgumentException("Ya existe un cliente con el ID " + client.getId() + ".");
+        }
+
+        clientRepository.save(client);
+    }
+
+    public void updateClient(Client client) {
+        validateClient(client);
+        clientRepository.update(client);
+    }
+
+    public void deleteClient(int id) {
+        clientRepository.deleteById(id);
+    }
+
     public List<Client> getAllClients() {
         return clientRepository.getAllClients();
+    }
+
+    private void validateClient(Client client) {
+        if (client == null) {
+            throw new IllegalArgumentException("Los datos del cliente no son válidos.");
+        }
+
+        if (client.getName() == null || client.getName().trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre es obligatorio.");
+        }
+
+        if (client.getEmail() == null || client.getEmail().trim().isEmpty()) {
+            throw new IllegalArgumentException("El correo es obligatorio.");
+        }
     }
 }
