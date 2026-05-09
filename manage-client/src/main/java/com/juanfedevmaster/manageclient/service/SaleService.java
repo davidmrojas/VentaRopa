@@ -3,16 +3,18 @@ package com.juanfedevmaster.manageclient.service;
 import com.juanfedevmaster.manageclient.model.Sale;
 import com.juanfedevmaster.manageclient.model.SaleItem;
 import com.juanfedevmaster.manageclient.repository.ISaleRepository;
+import java.util.List;
 
-public class SaleService {
+public class SaleService implements ISaleService {
     private final ISaleRepository saleRepository;
-    private final ProductService productService;
+    private final IProductService productService;
 
-    public SaleService(ISaleRepository saleRepository, ProductService productService) {
+    public SaleService(ISaleRepository saleRepository, IProductService productService) {
         this.saleRepository = saleRepository;
         this.productService = productService;
     }
 
+    @Override
     public void finalizeSale(Sale sale) {
         validateSale(sale);
 
@@ -22,6 +24,11 @@ public class SaleService {
         }
 
         saleRepository.save(sale);
+    }
+
+    @Override
+    public List<Sale> getAllSales() {
+        return saleRepository.getAllSales();
     }
 
     private void validateSale(Sale sale) {

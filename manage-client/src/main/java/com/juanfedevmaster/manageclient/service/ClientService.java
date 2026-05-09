@@ -4,26 +4,14 @@ import com.juanfedevmaster.manageclient.model.Client;
 import com.juanfedevmaster.manageclient.repository.IClientRepository;
 import java.util.List;
 
-public class ClientService {
+public class ClientService implements IClientService {
     private final IClientRepository clientRepository;
 
     public ClientService(IClientRepository clientRepository) {
         this.clientRepository = clientRepository;
     }
 
-    public void registrarCliente(int id, String name, String email, String phoneNumber) {
-        if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("El nombre es obligatorio.");
-        }
-
-        if (email == null || email.trim().isEmpty()) {
-            throw new IllegalArgumentException("El correo es obligatorio.");
-        }
-
-        Client client = new Client(id, name, email, phoneNumber);
-        clientRepository.save(client);
-    }
-
+    @Override
     public void saveClient(Client client) {
         validateClient(client);
 
@@ -35,15 +23,18 @@ public class ClientService {
         clientRepository.save(client);
     }
 
+    @Override
     public void updateClient(Client client) {
         validateClient(client);
         clientRepository.update(client);
     }
 
+    @Override
     public void deleteClient(int id) {
         clientRepository.deleteById(id);
     }
 
+    @Override
     public List<Client> getAllClients() {
         return clientRepository.getAllClients();
     }

@@ -19,7 +19,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <grid id="a3463" binding="panelClientesformulario" layout-manager="GridLayoutManager" row-count="4" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+              <grid id="a3463" binding="panelClientesFormulario" layout-manager="GridLayoutManager" row-count="4" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                 <margin top="0" left="0" bottom="0" right="0"/>
                 <constraints border-constraint="North"/>
                 <properties/>
@@ -57,7 +57,7 @@
                     </constraints>
                     <properties/>
                   </component>
-                  <component id="feb38" class="javax.swing.JLabel" binding="LabelClientId">
+                  <component id="feb38" class="javax.swing.JLabel" binding="labelClientId">
                     <constraints>
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -65,7 +65,7 @@
                       <text value="ID del Cliente"/>
                     </properties>
                   </component>
-                  <component id="79c33" class="javax.swing.JLabel" binding="LabelClientName">
+                  <component id="79c33" class="javax.swing.JLabel" binding="labelClientName">
                     <constraints>
                       <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -73,7 +73,7 @@
                       <text value="Nombre del cliente"/>
                     </properties>
                   </component>
-                  <component id="d0b89" class="javax.swing.JLabel" binding="LabelClientEmail">
+                  <component id="d0b89" class="javax.swing.JLabel" binding="labelClientEmail">
                     <constraints>
                       <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -81,7 +81,7 @@
                       <text value="Email"/>
                     </properties>
                   </component>
-                  <component id="ae2a4" class="javax.swing.JLabel" binding="LabelClientPhone">
+                  <component id="ae2a4" class="javax.swing.JLabel" binding="labelClientPhone">
                     <constraints>
                       <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -91,7 +91,7 @@
                   </component>
                 </children>
               </grid>
-              <scrollpane id="9750" binding="JScrollTableClientes">
+              <scrollpane id="9750" binding="scrollTableClientes">
                 <constraints border-constraint="Center"/>
                 <properties/>
                 <border type="none"/>
@@ -102,7 +102,7 @@
                   </component>
                 </children>
               </scrollpane>
-              <grid id="e0ba5" binding="BtnsPanelClientes" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+              <grid id="e0ba5" binding="btnsPanelClientes" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                 <margin top="0" left="0" bottom="0" right="0"/>
                 <constraints border-constraint="South"/>
                 <properties/>
@@ -143,7 +143,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <grid id="2306d" binding="panelProductosform" layout-manager="GridLayoutManager" row-count="6" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+              <grid id="2306d" binding="panelProductosForm" layout-manager="GridLayoutManager" row-count="6" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                 <margin top="0" left="0" bottom="0" right="0"/>
                 <constraints border-constraint="North"/>
                 <properties/>
@@ -197,15 +197,15 @@
                     </constraints>
                     <properties/>
                   </component>
-                  <component id="54e68" class="javax.swing.JLabel" binding="LabelProductId">
+                  <component id="54e68" class="javax.swing.JLabel" binding="labelProductId">
                     <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
                     </constraints>
                     <properties>
                       <text value="ID del Producto"/>
                     </properties>
                   </component>
-                  <component id="97964" class="javax.swing.JLabel" binding="LabelProductName">
+                  <component id="97964" class="javax.swing.JLabel" binding="labelProductName">
                     <constraints>
                       <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -213,7 +213,7 @@
                       <text value="Nombre del Producto"/>
                     </properties>
                   </component>
-                  <component id="deacf" class="javax.swing.JLabel" binding="LabelProductSize">
+                  <component id="deacf" class="javax.swing.JLabel" binding="labelProductSize">
                     <constraints>
                       <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -221,7 +221,7 @@
                       <text value="Talla"/>
                     </properties>
                   </component>
-                  <component id="54c13" class="javax.swing.JLabel" binding="LabelProductColor">
+                  <component id="54c13" class="javax.swing.JLabel" binding="labelProductColor">
                     <constraints>
                       <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -229,7 +229,7 @@
                       <text value="Color"/>
                     </properties>
                   </component>
-                  <component id="f28ea" class="javax.swing.JLabel" binding="LabelProductPrice">
+                  <component id="f28ea" class="javax.swing.JLabel" binding="labelProductPrice">
                     <constraints>
                       <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -237,7 +237,7 @@
                       <text value="Precio"/>
                     </properties>
                   </component>
-                  <component id="3e17a" class="javax.swing.JLabel" binding="LabelProductStock">
+                  <component id="3e17a" class="javax.swing.JLabel" binding="labelProductStock">
                     <constraints>
                       <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -247,7 +247,7 @@
                   </component>
                 </children>
               </grid>
-              <grid id="2b371" binding="BtnsPanelProductos" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+              <grid id="2b371" binding="btnsPanelProductos" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                 <margin top="0" left="0" bottom="0" right="0"/>
                 <constraints border-constraint="South"/>
                 <properties/>
@@ -279,7 +279,7 @@
                   </component>
                 </children>
               </grid>
-              <scrollpane id="803c8" binding="JScrollTableProductos">
+              <scrollpane id="803c8" binding="scrollTableProductos">
                 <constraints border-constraint="Center"/>
                 <properties/>
                 <border type="none"/>
@@ -299,7 +299,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <grid id="be9c7" binding="PanelVentasform" layout-manager="GridLayoutManager" row-count="3" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+              <grid id="be9c7" binding="panelVentasForm" layout-manager="GridLayoutManager" row-count="3" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                 <margin top="0" left="0" bottom="0" right="0"/>
                 <constraints border-constraint="North"/>
                 <properties/>
@@ -333,7 +333,7 @@
                       <text value="Agregar"/>
                     </properties>
                   </component>
-                  <component id="91ae" class="javax.swing.JLabel" binding="LabelCantidad">
+                  <component id="91ae" class="javax.swing.JLabel" binding="labelCantidad">
                     <constraints>
                       <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -343,7 +343,7 @@
                   </component>
                 </children>
               </grid>
-              <grid id="b6208" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+              <grid id="b6208" binding="panelFinalizarCompra" layout-manager="GridLayoutManager" row-count="3" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                 <margin top="0" left="0" bottom="0" right="0"/>
                 <constraints border-constraint="South"/>
                 <properties/>
@@ -351,7 +351,7 @@
                 <children>
                   <component id="9b73f" class="javax.swing.JButton" binding="btnFinalizeSale">
                     <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
                       <text value="Finalizar compra"/>
@@ -359,15 +359,36 @@
                   </component>
                   <component id="71a4d" class="javax.swing.JLabel" binding="lblTotalSale">
                     <constraints>
-                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
                       <text value="$ 0.00"/>
                     </properties>
                   </component>
+                  <scrollpane id="dea9c" binding="scrollHistory">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="25701" class="javax.swing.JTable" binding="tblSalesHistory">
+                        <constraints/>
+                        <properties/>
+                      </component>
+                    </children>
+                  </scrollpane>
+                  <component id="dcb75" class="javax.swing.JLabel" binding="labelSalesHistory">
+                    <constraints>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Historial de Ventas Finalizadas"/>
+                    </properties>
+                  </component>
                 </children>
               </grid>
-              <scrollpane id="125f0" binding="JScrollVentas">
+              <scrollpane id="125f0" binding="scrollVentas">
                 <constraints border-constraint="Center"/>
                 <properties/>
                 <border type="none"/>

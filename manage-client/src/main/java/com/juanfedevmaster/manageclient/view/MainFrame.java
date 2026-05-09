@@ -8,6 +8,9 @@ import com.juanfedevmaster.manageclient.repository.ClientRepository;
 import com.juanfedevmaster.manageclient.repository.ProductRepository;
 import com.juanfedevmaster.manageclient.repository.SaleRepository;
 import com.juanfedevmaster.manageclient.service.ClientService;
+import com.juanfedevmaster.manageclient.service.IClientService;
+import com.juanfedevmaster.manageclient.service.IProductService;
+import com.juanfedevmaster.manageclient.service.ISaleService;
 import com.juanfedevmaster.manageclient.service.ProductService;
 import com.juanfedevmaster.manageclient.service.SaleService;
 import javax.swing.*;
@@ -23,53 +26,57 @@ public class MainFrame extends JFrame{
     private JPanel panelClientes;
     private JPanel panelProductos;
     private JPanel panelVentas;
-    private JPanel panelClientesformulario;
+    private JPanel panelClientesFormulario;
     private JTextField txtClientId;
     private JTextField txtClientName;
     private JTextField txtClientEmail;
     private JTextField txtClientPhone;
-    private JScrollPane JScrollTableClientes;
+    private JScrollPane scrollTableClientes;
     private JTable tblClients;
-    private JPanel BtnsPanelClientes;
+    private JPanel btnsPanelClientes;
     private JButton btnSaveClient;
     private JButton btnEditClient;
     private JButton btnDeleteClient;
-    private JPanel panelProductosform;
+    private JPanel panelProductosForm;
     private JTextField txtProductId;
     private JTextField txtProductName;
     private JTextField txtProductSize;
     private JTextField txtProductColor;
     private JTextField txtProductPrice;
     private JTextField txtProductStock;
-    private JPanel BtnsPanelProductos;
+    private JPanel btnsPanelProductos;
     private JTable tblProducts;
-    private JScrollPane JScrollTableProductos;
+    private JScrollPane scrollTableProductos;
     private JButton btnSaveProduct;
     private JButton btnEditProduct;
     private JButton btnDeleteProduct;
-    private JPanel PanelVentasform;
+    private JPanel panelVentasForm;
     private JComboBox<Client> cbSalesClient;
     private JComboBox<Product> cbSalesProduct;
     private JTextField txtSalesQuantity;
     private JButton btnAddProduct;
-    private JScrollPane JScrollVentas;
+    private JScrollPane scrollVentas;
     private JTable tblSalesDetail;
     private JButton btnFinalizeSale;
     private JLabel lblTotalSale;
-    private JLabel LabelClientId;
-    private JLabel LabelClientName;
-    private JLabel LabelClientEmail;
-    private JLabel LabelClientPhone;
-    private JLabel LabelProductId;
-    private JLabel LabelProductName;
-    private JLabel LabelProductSize;
-    private JLabel LabelProductColor;
-    private JLabel LabelProductPrice;
-    private JLabel LabelProductStock;
-    private JLabel LabelCantidad;
-    private final ClientService clientService;
-    private final ProductService productService;
-    private final SaleService saleService;
+    private JLabel labelClientId;
+    private JLabel labelClientName;
+    private JLabel labelClientEmail;
+    private JLabel labelClientPhone;
+    private JLabel labelProductId;
+    private JLabel labelProductName;
+    private JLabel labelProductSize;
+    private JLabel labelProductColor;
+    private JLabel labelProductPrice;
+    private JLabel labelProductStock;
+    private JLabel labelCantidad;
+    private JPanel panelFinalizarCompra;
+    private JTable tblSalesHistory;
+    private JScrollPane scrollHistory;
+    private JLabel labelSalesHistory;
+    private final IClientService clientService;
+    private final IProductService productService;
+    private final ISaleService saleService;
     private final List<SaleItem> currentCart;
 
     public MainFrame() {
@@ -77,10 +84,12 @@ public class MainFrame extends JFrame{
         this.productService = new ProductService(new ProductRepository());
         this.saleService = new SaleService(new SaleRepository(), productService);
         this.currentCart = new ArrayList<>();
+        initializeComponents();
         setTitle("Sistema para venta de ropa");
         setContentPane(panel1);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setMinimumSize(new Dimension(1000,800));
+        pack();
         setLocationRelativeTo(null);
 
         // Conecta los eventos de la interfaz con sus acciones.
@@ -99,6 +108,161 @@ public class MainFrame extends JFrame{
         refreshProductTable();
         loadSalesCombos();
         updateSaleTotalLabel();
+        refreshSalesHistoryTable();
+    }
+
+    private void initializeComponents() {
+        panel1 = new JPanel(new BorderLayout());
+        tabbedPanePrincipal = new JTabbedPane();
+
+        panelClientes = createClientsPanel();
+        panelProductos = createProductsPanel();
+        panelVentas = createSalesPanel();
+
+        tabbedPanePrincipal.addTab("Cliente", panelClientes);
+        tabbedPanePrincipal.addTab("Productos", panelProductos);
+        tabbedPanePrincipal.addTab("Ventas", panelVentas);
+        panel1.add(tabbedPanePrincipal, BorderLayout.CENTER);
+    }
+
+    private JPanel createClientsPanel() {
+        JPanel panel = new JPanel(new BorderLayout(8, 8));
+        panelClientesFormulario = new JPanel(new GridBagLayout());
+        GridBagConstraints constraints = createFormConstraints();
+
+        labelClientId = new JLabel("ID del Cliente");
+        labelClientName = new JLabel("Nombre del cliente");
+        labelClientEmail = new JLabel("Correo");
+        labelClientPhone = new JLabel("Telefono");
+        txtClientId = new JTextField();
+        txtClientName = new JTextField();
+        txtClientEmail = new JTextField();
+        txtClientPhone = new JTextField();
+
+        addFormRow(panelClientesFormulario, constraints, 0, labelClientId, txtClientId);
+        addFormRow(panelClientesFormulario, constraints, 1, labelClientName, txtClientName);
+        addFormRow(panelClientesFormulario, constraints, 2, labelClientEmail, txtClientEmail);
+        addFormRow(panelClientesFormulario, constraints, 3, labelClientPhone, txtClientPhone);
+
+        tblClients = new JTable();
+        scrollTableClientes = new JScrollPane(tblClients);
+        btnsPanelClientes = new JPanel(new GridLayout(1, 3, 8, 0));
+        btnSaveClient = new JButton("Guardar");
+        btnEditClient = new JButton("Editar");
+        btnDeleteClient = new JButton("Eliminar");
+        btnsPanelClientes.add(btnSaveClient);
+        btnsPanelClientes.add(btnEditClient);
+        btnsPanelClientes.add(btnDeleteClient);
+
+        panel.add(panelClientesFormulario, BorderLayout.NORTH);
+        panel.add(scrollTableClientes, BorderLayout.CENTER);
+        panel.add(btnsPanelClientes, BorderLayout.SOUTH);
+        return panel;
+    }
+
+    private JPanel createProductsPanel() {
+        JPanel panel = new JPanel(new BorderLayout(8, 8));
+        panelProductosForm = new JPanel(new GridBagLayout());
+        GridBagConstraints constraints = createFormConstraints();
+
+        labelProductId = new JLabel("ID del producto");
+        labelProductName = new JLabel("Nombre");
+        labelProductSize = new JLabel("Talla");
+        labelProductColor = new JLabel("Color");
+        labelProductPrice = new JLabel("Precio");
+        labelProductStock = new JLabel("Stock");
+        txtProductId = new JTextField();
+        txtProductName = new JTextField();
+        txtProductSize = new JTextField();
+        txtProductColor = new JTextField();
+        txtProductPrice = new JTextField();
+        txtProductStock = new JTextField();
+
+        addFormRow(panelProductosForm, constraints, 0, labelProductId, txtProductId);
+        addFormRow(panelProductosForm, constraints, 1, labelProductName, txtProductName);
+        addFormRow(panelProductosForm, constraints, 2, labelProductSize, txtProductSize);
+        addFormRow(panelProductosForm, constraints, 3, labelProductColor, txtProductColor);
+        addFormRow(panelProductosForm, constraints, 4, labelProductPrice, txtProductPrice);
+        addFormRow(panelProductosForm, constraints, 5, labelProductStock, txtProductStock);
+
+        tblProducts = new JTable();
+        scrollTableProductos = new JScrollPane(tblProducts);
+        btnsPanelProductos = new JPanel(new GridLayout(1, 3, 8, 0));
+        btnSaveProduct = new JButton("Guardar");
+        btnEditProduct = new JButton("Editar");
+        btnDeleteProduct = new JButton("Eliminar");
+        btnsPanelProductos.add(btnSaveProduct);
+        btnsPanelProductos.add(btnEditProduct);
+        btnsPanelProductos.add(btnDeleteProduct);
+
+        panel.add(panelProductosForm, BorderLayout.NORTH);
+        panel.add(scrollTableProductos, BorderLayout.CENTER);
+        panel.add(btnsPanelProductos, BorderLayout.SOUTH);
+        return panel;
+    }
+
+    private JPanel createSalesPanel() {
+        JPanel panel = new JPanel(new BorderLayout(8, 8));
+        panelVentasForm = new JPanel(new GridBagLayout());
+        GridBagConstraints constraints = createFormConstraints();
+
+        cbSalesClient = new JComboBox<>();
+        cbSalesProduct = new JComboBox<>();
+        txtSalesQuantity = new JTextField();
+        btnAddProduct = new JButton("Agregar");
+        labelCantidad = new JLabel("Cantidad:");
+
+        addFormRow(panelVentasForm, constraints, 0, new JLabel("Cliente"), cbSalesClient);
+        addFormRow(panelVentasForm, constraints, 1, new JLabel("Producto"), cbSalesProduct);
+        addFormRow(panelVentasForm, constraints, 2, labelCantidad, txtSalesQuantity);
+        constraints.gridx = 1;
+        constraints.gridy = 3;
+        constraints.weightx = 1;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        panelVentasForm.add(btnAddProduct, constraints);
+
+        tblSalesDetail = new JTable();
+        scrollVentas = new JScrollPane(tblSalesDetail);
+        panelFinalizarCompra = new JPanel(new BorderLayout(8, 8));
+        labelSalesHistory = new JLabel("Historial de Ventas Finalizadas");
+        tblSalesHistory = new JTable();
+        scrollHistory = new JScrollPane(tblSalesHistory);
+        scrollHistory.setPreferredSize(new Dimension(200, 140));
+
+        JPanel salesFooter = new JPanel(new GridLayout(1, 2, 8, 0));
+        btnFinalizeSale = new JButton("Finalizar compra");
+        lblTotalSale = new JLabel("$ 0.00");
+        salesFooter.add(btnFinalizeSale);
+        salesFooter.add(lblTotalSale);
+        panelFinalizarCompra.add(labelSalesHistory, BorderLayout.NORTH);
+        panelFinalizarCompra.add(scrollHistory, BorderLayout.CENTER);
+        panelFinalizarCompra.add(salesFooter, BorderLayout.SOUTH);
+
+        panel.add(panelVentasForm, BorderLayout.NORTH);
+        panel.add(scrollVentas, BorderLayout.CENTER);
+        panel.add(panelFinalizarCompra, BorderLayout.SOUTH);
+        return panel;
+    }
+
+    private GridBagConstraints createFormConstraints() {
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.insets = new Insets(4, 4, 4, 4);
+        constraints.anchor = GridBagConstraints.WEST;
+        return constraints;
+    }
+
+    private void addFormRow(JPanel panel, GridBagConstraints constraints, int row, JLabel label, JComponent field) {
+        constraints.gridx = 0;
+        constraints.gridy = row;
+        constraints.weightx = 0;
+        constraints.fill = GridBagConstraints.NONE;
+        panel.add(label, constraints);
+
+        constraints.gridx = 1;
+        constraints.weightx = 1;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        field.setPreferredSize(new Dimension(180, field.getPreferredSize().height));
+        panel.add(field, constraints);
     }
 
     private void refreshClientTable() {
@@ -377,6 +541,7 @@ public class MainFrame extends JFrame{
             saleService.finalizeSale(sale);
 
             clearSaleUI();
+            refreshSalesHistoryTable();
             refreshProductTable();
             loadSalesCombos();
             JOptionPane.showMessageDialog(this, "La venta fue registrada correctamente.");
@@ -398,6 +563,29 @@ public class MainFrame extends JFrame{
                     item.getSubtotal()
             });
         }
+    }
+
+    private void refreshSalesHistoryTable() {
+        DefaultTableModel tableModel = new DefaultTableModel(
+                new Object[]{"ID", "Client", "Total"}, 0
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        List<Sale> sales = saleService.getAllSales();
+        for (int i = 0; i < sales.size(); i++) {
+            Sale sale = sales.get(i);
+            tableModel.addRow(new Object[]{
+                    i + 1,
+                    sale.getClient(),
+                    sale.getTotal()
+            });
+        }
+
+        tblSalesHistory.setModel(tableModel);
     }
 
     private void updateSaleTotalLabel() {
