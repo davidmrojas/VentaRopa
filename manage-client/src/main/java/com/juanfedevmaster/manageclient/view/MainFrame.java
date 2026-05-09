@@ -17,45 +17,48 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.event.ListSelectionEvent;
 import java.awt.*;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+// Ventana principal de la aplicacion.
 public class MainFrame extends JFrame{
-    private JTabbedPane tabbedPanePrincipal;
-    private JPanel panel1;
-    private JPanel panelClientes;
-    private JPanel panelProductos;
-    private JPanel panelVentas;
-    private JPanel panelClientesFormulario;
+    private static final DateTimeFormatter SALE_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private JTabbedPane mainTabbedPane;
+    private JPanel contentPanel;
+    private JPanel clientsPanel;
+    private JPanel productsPanel;
+    private JPanel salesPanel;
+    private JPanel clientFormPanel;
     private JTextField txtClientId;
     private JTextField txtClientName;
     private JTextField txtClientEmail;
     private JTextField txtClientPhone;
-    private JScrollPane scrollTableClientes;
+    private JScrollPane clientsTableScrollPane;
     private JTable tblClients;
-    private JPanel btnsPanelClientes;
+    private JPanel clientButtonsPanel;
     private JButton btnSaveClient;
     private JButton btnEditClient;
     private JButton btnDeleteClient;
-    private JPanel panelProductosForm;
+    private JPanel productFormPanel;
     private JTextField txtProductId;
     private JTextField txtProductName;
     private JTextField txtProductSize;
     private JTextField txtProductColor;
     private JTextField txtProductPrice;
     private JTextField txtProductStock;
-    private JPanel btnsPanelProductos;
+    private JPanel productButtonsPanel;
     private JTable tblProducts;
-    private JScrollPane scrollTableProductos;
+    private JScrollPane productsTableScrollPane;
     private JButton btnSaveProduct;
     private JButton btnEditProduct;
     private JButton btnDeleteProduct;
-    private JPanel panelVentasForm;
+    private JPanel salesFormPanel;
     private JComboBox<Client> cbSalesClient;
     private JComboBox<Product> cbSalesProduct;
     private JTextField txtSalesQuantity;
     private JButton btnAddProduct;
-    private JScrollPane scrollVentas;
+    private JScrollPane salesDetailScrollPane;
     private JTable tblSalesDetail;
     private JButton btnFinalizeSale;
     private JLabel lblTotalSale;
@@ -69,8 +72,8 @@ public class MainFrame extends JFrame{
     private JLabel labelProductColor;
     private JLabel labelProductPrice;
     private JLabel labelProductStock;
-    private JLabel labelCantidad;
-    private JPanel panelFinalizarCompra;
+    private JLabel labelQuantity;
+    private JPanel checkoutPanel;
     private JTable tblSalesHistory;
     private JScrollPane scrollHistory;
     private JLabel labelSalesHistory;
@@ -79,6 +82,7 @@ public class MainFrame extends JFrame{
     private final ISaleService saleService;
     private final List<SaleItem> currentCart;
 
+    // Construye la ventana y carga los datos iniciales.
     public MainFrame() {
         this.clientService = new ClientService(new ClientRepository());
         this.productService = new ProductService(new ProductRepository());
@@ -86,7 +90,7 @@ public class MainFrame extends JFrame{
         this.currentCart = new ArrayList<>();
         initializeComponents();
         setTitle("Sistema para venta de ropa");
-        setContentPane(panel1);
+        setContentPane(contentPanel);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setMinimumSize(new Dimension(1000,800));
         pack();
@@ -111,23 +115,25 @@ public class MainFrame extends JFrame{
         refreshSalesHistoryTable();
     }
 
+    // Inicializa la estructura principal de pestañas.
     private void initializeComponents() {
-        panel1 = new JPanel(new BorderLayout());
-        tabbedPanePrincipal = new JTabbedPane();
+        contentPanel = new JPanel(new BorderLayout());
+        mainTabbedPane = new JTabbedPane();
 
-        panelClientes = createClientsPanel();
-        panelProductos = createProductsPanel();
-        panelVentas = createSalesPanel();
+        clientsPanel = createClientsPanel();
+        productsPanel = createProductsPanel();
+        salesPanel = createSalesPanel();
 
-        tabbedPanePrincipal.addTab("Cliente", panelClientes);
-        tabbedPanePrincipal.addTab("Productos", panelProductos);
-        tabbedPanePrincipal.addTab("Ventas", panelVentas);
-        panel1.add(tabbedPanePrincipal, BorderLayout.CENTER);
+        mainTabbedPane.addTab("Cliente", clientsPanel);
+        mainTabbedPane.addTab("Productos", productsPanel);
+        mainTabbedPane.addTab("Ventas", salesPanel);
+        contentPanel.add(mainTabbedPane, BorderLayout.CENTER);
     }
 
+    // Crea la pestaña de clientes.
     private JPanel createClientsPanel() {
         JPanel panel = new JPanel(new BorderLayout(8, 8));
-        panelClientesFormulario = new JPanel(new GridBagLayout());
+        clientFormPanel = new JPanel(new GridBagLayout());
         GridBagConstraints constraints = createFormConstraints();
 
         labelClientId = new JLabel("ID del Cliente");
@@ -139,30 +145,31 @@ public class MainFrame extends JFrame{
         txtClientEmail = new JTextField();
         txtClientPhone = new JTextField();
 
-        addFormRow(panelClientesFormulario, constraints, 0, labelClientId, txtClientId);
-        addFormRow(panelClientesFormulario, constraints, 1, labelClientName, txtClientName);
-        addFormRow(panelClientesFormulario, constraints, 2, labelClientEmail, txtClientEmail);
-        addFormRow(panelClientesFormulario, constraints, 3, labelClientPhone, txtClientPhone);
+        addFormRow(clientFormPanel, constraints, 0, labelClientId, txtClientId);
+        addFormRow(clientFormPanel, constraints, 1, labelClientName, txtClientName);
+        addFormRow(clientFormPanel, constraints, 2, labelClientEmail, txtClientEmail);
+        addFormRow(clientFormPanel, constraints, 3, labelClientPhone, txtClientPhone);
 
         tblClients = new JTable();
-        scrollTableClientes = new JScrollPane(tblClients);
-        btnsPanelClientes = new JPanel(new GridLayout(1, 3, 8, 0));
+        clientsTableScrollPane = new JScrollPane(tblClients);
+        clientButtonsPanel = new JPanel(new GridLayout(1, 3, 8, 0));
         btnSaveClient = new JButton("Guardar");
         btnEditClient = new JButton("Editar");
         btnDeleteClient = new JButton("Eliminar");
-        btnsPanelClientes.add(btnSaveClient);
-        btnsPanelClientes.add(btnEditClient);
-        btnsPanelClientes.add(btnDeleteClient);
+        clientButtonsPanel.add(btnSaveClient);
+        clientButtonsPanel.add(btnEditClient);
+        clientButtonsPanel.add(btnDeleteClient);
 
-        panel.add(panelClientesFormulario, BorderLayout.NORTH);
-        panel.add(scrollTableClientes, BorderLayout.CENTER);
-        panel.add(btnsPanelClientes, BorderLayout.SOUTH);
+        panel.add(clientFormPanel, BorderLayout.NORTH);
+        panel.add(clientsTableScrollPane, BorderLayout.CENTER);
+        panel.add(clientButtonsPanel, BorderLayout.SOUTH);
         return panel;
     }
 
+    // Crea la pestaña de productos.
     private JPanel createProductsPanel() {
         JPanel panel = new JPanel(new BorderLayout(8, 8));
-        panelProductosForm = new JPanel(new GridBagLayout());
+        productFormPanel = new JPanel(new GridBagLayout());
         GridBagConstraints constraints = createFormConstraints();
 
         labelProductId = new JLabel("ID del producto");
@@ -178,52 +185,53 @@ public class MainFrame extends JFrame{
         txtProductPrice = new JTextField();
         txtProductStock = new JTextField();
 
-        addFormRow(panelProductosForm, constraints, 0, labelProductId, txtProductId);
-        addFormRow(panelProductosForm, constraints, 1, labelProductName, txtProductName);
-        addFormRow(panelProductosForm, constraints, 2, labelProductSize, txtProductSize);
-        addFormRow(panelProductosForm, constraints, 3, labelProductColor, txtProductColor);
-        addFormRow(panelProductosForm, constraints, 4, labelProductPrice, txtProductPrice);
-        addFormRow(panelProductosForm, constraints, 5, labelProductStock, txtProductStock);
+        addFormRow(productFormPanel, constraints, 0, labelProductId, txtProductId);
+        addFormRow(productFormPanel, constraints, 1, labelProductName, txtProductName);
+        addFormRow(productFormPanel, constraints, 2, labelProductSize, txtProductSize);
+        addFormRow(productFormPanel, constraints, 3, labelProductColor, txtProductColor);
+        addFormRow(productFormPanel, constraints, 4, labelProductPrice, txtProductPrice);
+        addFormRow(productFormPanel, constraints, 5, labelProductStock, txtProductStock);
 
         tblProducts = new JTable();
-        scrollTableProductos = new JScrollPane(tblProducts);
-        btnsPanelProductos = new JPanel(new GridLayout(1, 3, 8, 0));
+        productsTableScrollPane = new JScrollPane(tblProducts);
+        productButtonsPanel = new JPanel(new GridLayout(1, 3, 8, 0));
         btnSaveProduct = new JButton("Guardar");
         btnEditProduct = new JButton("Editar");
         btnDeleteProduct = new JButton("Eliminar");
-        btnsPanelProductos.add(btnSaveProduct);
-        btnsPanelProductos.add(btnEditProduct);
-        btnsPanelProductos.add(btnDeleteProduct);
+        productButtonsPanel.add(btnSaveProduct);
+        productButtonsPanel.add(btnEditProduct);
+        productButtonsPanel.add(btnDeleteProduct);
 
-        panel.add(panelProductosForm, BorderLayout.NORTH);
-        panel.add(scrollTableProductos, BorderLayout.CENTER);
-        panel.add(btnsPanelProductos, BorderLayout.SOUTH);
+        panel.add(productFormPanel, BorderLayout.NORTH);
+        panel.add(productsTableScrollPane, BorderLayout.CENTER);
+        panel.add(productButtonsPanel, BorderLayout.SOUTH);
         return panel;
     }
 
+    // Crea la pestaña de ventas.
     private JPanel createSalesPanel() {
         JPanel panel = new JPanel(new BorderLayout(8, 8));
-        panelVentasForm = new JPanel(new GridBagLayout());
+        salesFormPanel = new JPanel(new GridBagLayout());
         GridBagConstraints constraints = createFormConstraints();
 
         cbSalesClient = new JComboBox<>();
         cbSalesProduct = new JComboBox<>();
         txtSalesQuantity = new JTextField();
         btnAddProduct = new JButton("Agregar");
-        labelCantidad = new JLabel("Cantidad:");
+        labelQuantity = new JLabel("Cantidad:");
 
-        addFormRow(panelVentasForm, constraints, 0, new JLabel("Cliente"), cbSalesClient);
-        addFormRow(panelVentasForm, constraints, 1, new JLabel("Producto"), cbSalesProduct);
-        addFormRow(panelVentasForm, constraints, 2, labelCantidad, txtSalesQuantity);
+        addFormRow(salesFormPanel, constraints, 0, new JLabel("Cliente"), cbSalesClient);
+        addFormRow(salesFormPanel, constraints, 1, new JLabel("Producto"), cbSalesProduct);
+        addFormRow(salesFormPanel, constraints, 2, labelQuantity, txtSalesQuantity);
         constraints.gridx = 1;
         constraints.gridy = 3;
         constraints.weightx = 1;
         constraints.fill = GridBagConstraints.HORIZONTAL;
-        panelVentasForm.add(btnAddProduct, constraints);
+        salesFormPanel.add(btnAddProduct, constraints);
 
         tblSalesDetail = new JTable();
-        scrollVentas = new JScrollPane(tblSalesDetail);
-        panelFinalizarCompra = new JPanel(new BorderLayout(8, 8));
+        salesDetailScrollPane = new JScrollPane(tblSalesDetail);
+        checkoutPanel = new JPanel(new BorderLayout(8, 8));
         labelSalesHistory = new JLabel("Historial de Ventas Finalizadas");
         tblSalesHistory = new JTable();
         scrollHistory = new JScrollPane(tblSalesHistory);
@@ -234,16 +242,17 @@ public class MainFrame extends JFrame{
         lblTotalSale = new JLabel("$ 0.00");
         salesFooter.add(btnFinalizeSale);
         salesFooter.add(lblTotalSale);
-        panelFinalizarCompra.add(labelSalesHistory, BorderLayout.NORTH);
-        panelFinalizarCompra.add(scrollHistory, BorderLayout.CENTER);
-        panelFinalizarCompra.add(salesFooter, BorderLayout.SOUTH);
+        checkoutPanel.add(labelSalesHistory, BorderLayout.NORTH);
+        checkoutPanel.add(scrollHistory, BorderLayout.CENTER);
+        checkoutPanel.add(salesFooter, BorderLayout.SOUTH);
 
-        panel.add(panelVentasForm, BorderLayout.NORTH);
-        panel.add(scrollVentas, BorderLayout.CENTER);
-        panel.add(panelFinalizarCompra, BorderLayout.SOUTH);
+        panel.add(salesFormPanel, BorderLayout.NORTH);
+        panel.add(salesDetailScrollPane, BorderLayout.CENTER);
+        panel.add(checkoutPanel, BorderLayout.SOUTH);
         return panel;
     }
 
+    // Crea restricciones base para formularios.
     private GridBagConstraints createFormConstraints() {
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.insets = new Insets(4, 4, 4, 4);
@@ -251,6 +260,7 @@ public class MainFrame extends JFrame{
         return constraints;
     }
 
+    // Agrega una fila al formulario.
     private void addFormRow(JPanel panel, GridBagConstraints constraints, int row, JLabel label, JComponent field) {
         constraints.gridx = 0;
         constraints.gridy = row;
@@ -265,6 +275,7 @@ public class MainFrame extends JFrame{
         panel.add(field, constraints);
     }
 
+    // Refresca la tabla de clientes.
     private void refreshClientTable() {
         DefaultTableModel tableModel = new DefaultTableModel(
                 new Object[]{"ID", "Nombre", "Correo", "Telefono"}, 0
@@ -282,8 +293,11 @@ public class MainFrame extends JFrame{
         tblClients.setModel(tableModel);
     }
 
+    // Guarda un cliente nuevo.
     private void saveClient() {
         try {
+            validateClientFieldsNotEmpty();
+            validateClientIdIsUnique();
             Client client = buildClientFromFields();
 
             // La vista delega las reglas al servicio.
@@ -299,12 +313,14 @@ public class MainFrame extends JFrame{
         }
     }
 
+    // Edita el cliente seleccionado.
     private void editClient() {
         try {
             Client client = buildClientFromFields();
             clientService.updateClient(client);
             refreshClientTable();
             clearClientForm();
+            loadSalesCombos();
         } catch (NumberFormatException exception) {
             JOptionPane.showMessageDialog(this, "El ID debe ser un numero entero.");
         } catch (IllegalArgumentException exception) {
@@ -312,6 +328,7 @@ public class MainFrame extends JFrame{
         }
     }
 
+    // Elimina el cliente seleccionado.
     private void deleteClient() {
         try {
             int id = Integer.parseInt(txtClientId.getText().trim());
@@ -335,14 +352,56 @@ public class MainFrame extends JFrame{
         }
     }
 
+    // Construye un cliente desde el formulario.
     private Client buildClientFromFields() {
-        int id = Integer.parseInt(txtClientId.getText().trim());
+        int id;
+        try {
+            id = Integer.parseInt(txtClientId.getText().trim());
+        } catch (NumberFormatException exception) {
+            throw new IllegalArgumentException("El ID del cliente debe ser un número entero.");
+        }
+
         String name = txtClientName.getText().trim();
         String email = txtClientEmail.getText().trim();
+        validateClientEmailFormat(email);
         String phone = txtClientPhone.getText().trim();
         return new Client(id, name, email, phone);
     }
 
+    // Valida campos obligatorios del cliente.
+    private void validateClientFieldsNotEmpty() {
+        if (txtClientId.getText().trim().isEmpty()
+                || txtClientName.getText().trim().isEmpty()
+                || txtClientEmail.getText().trim().isEmpty()
+                || txtClientPhone.getText().trim().isEmpty()) {
+            throw new IllegalArgumentException("Todos los campos del cliente son obligatorios.");
+        }
+    }
+
+    // Valida el formato del correo.
+    private void validateClientEmailFormat(String email) {
+        if (!email.matches("^[\\w.-]+@[\\w.-]+\\.[A-Za-z]{2,}$")) {
+            throw new IllegalArgumentException("El correo electrónico no tiene un formato válido.");
+        }
+    }
+
+    // Valida que el ID del cliente no exista.
+    private void validateClientIdIsUnique() {
+        int id;
+        try {
+            id = Integer.parseInt(txtClientId.getText().trim());
+        } catch (NumberFormatException exception) {
+            throw new IllegalArgumentException("El ID del cliente debe ser un número entero.");
+        }
+
+        for (Client client : clientService.getAllClients()) {
+            if (client.getId() == id) {
+                throw new IllegalArgumentException("Ya existe un cliente con ese ID. Los IDs deben ser diferentes.");
+            }
+        }
+    }
+
+    // Carga el cliente seleccionado en el formulario.
     private void onClientSelected(ListSelectionEvent event) {
         if (event.getValueIsAdjusting()) {
             return;
@@ -359,6 +418,7 @@ public class MainFrame extends JFrame{
         txtClientPhone.setText(tblClients.getValueAt(selectedRow, 3).toString());
     }
 
+    // Limpia el formulario de clientes.
     private void clearClientForm() {
         txtClientId.setText("");
         txtClientName.setText("");
@@ -366,6 +426,7 @@ public class MainFrame extends JFrame{
         txtClientPhone.setText("");
     }
 
+    // Refresca la tabla de productos.
     private void refreshProductTable() {
         DefaultTableModel tableModel = new DefaultTableModel(
                 new Object[]{"ID", "Nombre", "Talla", "Color", "Precio", "Stock"}, 0
@@ -385,8 +446,11 @@ public class MainFrame extends JFrame{
         tblProducts.setModel(tableModel);
     }
 
+    // Guarda un producto nuevo.
     private void saveProduct() {
         try {
+            validateProductFieldsNotEmpty();
+            validateProductIdIsUnique();
             Product product = buildProductFromFields();
 
             // La vista delega las reglas al servicio.
@@ -402,6 +466,7 @@ public class MainFrame extends JFrame{
         }
     }
 
+    // Edita el producto seleccionado.
     private void editProduct() {
         try {
             Product product = buildProductFromFields();
@@ -418,6 +483,7 @@ public class MainFrame extends JFrame{
         }
     }
 
+    // Elimina el producto seleccionado.
     private void deleteProduct() {
         try {
             int id = Integer.parseInt(txtProductId.getText().trim());
@@ -444,16 +510,66 @@ public class MainFrame extends JFrame{
         }
     }
 
+    // Construye un producto desde el formulario.
     private Product buildProductFromFields() {
-        int id = Integer.parseInt(txtProductId.getText().trim());
+        int id;
+        double price;
+        int stock;
+
+        try {
+            id = Integer.parseInt(txtProductId.getText().trim());
+        } catch (NumberFormatException exception) {
+            throw new IllegalArgumentException("El ID del producto debe ser un número entero.");
+        }
+
         String name = txtProductName.getText().trim();
         String size = txtProductSize.getText().trim();
         String color = txtProductColor.getText().trim();
-        double price = Double.parseDouble(txtProductPrice.getText().trim());
-        int stock = Integer.parseInt(txtProductStock.getText().trim());
+
+        try {
+            price = Double.parseDouble(txtProductPrice.getText().trim());
+        } catch (NumberFormatException exception) {
+            throw new IllegalArgumentException("El precio del producto debe ser un número válido.");
+        }
+
+        try {
+            stock = Integer.parseInt(txtProductStock.getText().trim());
+        } catch (NumberFormatException exception) {
+            throw new IllegalArgumentException("El stock del producto debe ser un número entero.");
+        }
+
         return new Product(id, name, size, color, price, stock);
     }
 
+    // Valida campos obligatorios del producto.
+    private void validateProductFieldsNotEmpty() {
+        if (txtProductId.getText().trim().isEmpty()
+                || txtProductName.getText().trim().isEmpty()
+                || txtProductSize.getText().trim().isEmpty()
+                || txtProductColor.getText().trim().isEmpty()
+                || txtProductPrice.getText().trim().isEmpty()
+                || txtProductStock.getText().trim().isEmpty()) {
+            throw new IllegalArgumentException("Todos los campos del producto son obligatorios.");
+        }
+    }
+
+    // Valida que el ID del producto no exista.
+    private void validateProductIdIsUnique() {
+        int id;
+        try {
+            id = Integer.parseInt(txtProductId.getText().trim());
+        } catch (NumberFormatException exception) {
+            throw new IllegalArgumentException("El ID del producto debe ser un número entero.");
+        }
+
+        for (Product product : productService.getAllProducts()) {
+            if (product.getId() == id) {
+                throw new IllegalArgumentException("Ya existe un producto con ese ID. Los IDs deben ser diferentes.");
+            }
+        }
+    }
+
+    // Carga el producto seleccionado en el formulario.
     private void onProductSelected(ListSelectionEvent event) {
         if (event.getValueIsAdjusting()) {
             return;
@@ -472,6 +588,7 @@ public class MainFrame extends JFrame{
         txtProductStock.setText(tblProducts.getValueAt(selectedRow, 5).toString());
     }
 
+    // Limpia el formulario de productos.
     private void clearProductForm() {
         txtProductId.setText("");
         txtProductName.setText("");
@@ -481,11 +598,13 @@ public class MainFrame extends JFrame{
         txtProductStock.setText("");
     }
 
+    // Inicializa la tabla del carrito.
     private void initializeSalesTable() {
         DefaultTableModel tableModel = new DefaultTableModel(
                 new Object[]{"Producto", "Talla", "Cantidad", "Precio U.", "Subtotal"}, 0
         ) {
             @Override
+            // Evita edicion directa del carrito.
             public boolean isCellEditable(int row, int column) {
                 // La tabla solo muestra el detalle del carrito.
                 return false;
@@ -495,8 +614,9 @@ public class MainFrame extends JFrame{
         tblSalesDetail.setModel(tableModel);
     }
 
+    // Carga clientes y productos en los desplegables.
     private void loadSalesCombos() {
-        // Recarga los combos para reflejar el estado actual.
+        // Recarga los desplegables para reflejar el estado actual.
         cbSalesClient.removeAllItems();
         cbSalesProduct.removeAllItems();
 
@@ -509,6 +629,7 @@ public class MainFrame extends JFrame{
         }
     }
 
+    // Agrega un producto al carrito.
     private void addProductToCart() {
         try {
             Product selectedProduct = (Product) cbSalesProduct.getSelectedItem();
@@ -532,6 +653,7 @@ public class MainFrame extends JFrame{
         }
     }
 
+    // Finaliza la venta actual.
     private void finalizeSale() {
         try {
             Client selectedClient = (Client) cbSalesClient.getSelectedItem();
@@ -550,6 +672,7 @@ public class MainFrame extends JFrame{
         }
     }
 
+    // Refresca la tabla del carrito.
     private void refreshSalesTable() {
         DefaultTableModel tableModel = (DefaultTableModel) tblSalesDetail.getModel();
         tableModel.setRowCount(0);
@@ -565,11 +688,13 @@ public class MainFrame extends JFrame{
         }
     }
 
+    // Refresca la tabla del historial.
     private void refreshSalesHistoryTable() {
         DefaultTableModel tableModel = new DefaultTableModel(
-                new Object[]{"ID", "Client", "Total"}, 0
+                new Object[]{"ID", "Fecha y hora", "Cliente", "Total"}, 0
         ) {
             @Override
+            // Evita edicion directa del historial.
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
@@ -580,6 +705,7 @@ public class MainFrame extends JFrame{
             Sale sale = sales.get(i);
             tableModel.addRow(new Object[]{
                     i + 1,
+                    formatSaleCompletedAt(sale),
                     sale.getClient(),
                     sale.getTotal()
             });
@@ -588,10 +714,21 @@ public class MainFrame extends JFrame{
         tblSalesHistory.setModel(tableModel);
     }
 
+    // Formatea la fecha de cierre.
+    private String formatSaleCompletedAt(Sale sale) {
+        if (sale.getCompletedAt() == null) {
+            return "";
+        }
+
+        return sale.getCompletedAt().format(SALE_DATE_TIME_FORMATTER);
+    }
+
+    // Actualiza el total visible de la venta.
     private void updateSaleTotalLabel() {
         lblTotalSale.setText(String.format("$ %.2f", calculateCartTotal()));
     }
 
+    // Calcula el total del carrito.
     private double calculateCartTotal() {
         double total = 0;
 
@@ -602,6 +739,7 @@ public class MainFrame extends JFrame{
         return total;
     }
 
+    // Suma la cantidad de un producto en el carrito.
     private int getQuantityInCart(Product product) {
         if (product == null) {
             return 0;
@@ -618,6 +756,7 @@ public class MainFrame extends JFrame{
         return quantity;
     }
 
+    // Quita del carrito un producto eliminado.
     private void removeDeletedProductFromCart(int productId) {
         // Elimina del carrito productos que ya no existen en la lista principal.
         for (int i = currentCart.size() - 1; i >= 0; i--) {
@@ -627,6 +766,7 @@ public class MainFrame extends JFrame{
         }
     }
 
+    // Limpia la interfaz de venta.
     private void clearSaleUI() {
         // Reinicia el formulario despues de registrar la venta.
         currentCart.clear();
@@ -643,6 +783,7 @@ public class MainFrame extends JFrame{
         }
     }
 
+    // Ejecuta la ventana principal.
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             MainFrame frame = new MainFrame();

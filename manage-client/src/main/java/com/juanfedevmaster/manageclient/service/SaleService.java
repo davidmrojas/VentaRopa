@@ -3,18 +3,22 @@ package com.juanfedevmaster.manageclient.service;
 import com.juanfedevmaster.manageclient.model.Sale;
 import com.juanfedevmaster.manageclient.model.SaleItem;
 import com.juanfedevmaster.manageclient.repository.ISaleRepository;
+import java.time.LocalDateTime;
 import java.util.List;
 
+// Aplica las reglas de negocio de ventas.
 public class SaleService implements ISaleService {
     private final ISaleRepository saleRepository;
     private final IProductService productService;
 
+    // Recibe las dependencias de ventas y productos.
     public SaleService(ISaleRepository saleRepository, IProductService productService) {
         this.saleRepository = saleRepository;
         this.productService = productService;
     }
 
     @Override
+    // Finaliza la venta y descuenta stock.
     public void finalizeSale(Sale sale) {
         validateSale(sale);
 
@@ -23,14 +27,17 @@ public class SaleService implements ISaleService {
             productService.subtractStock(item.getProduct(), item.getQuantity());
         }
 
+        sale.setCompletedAt(LocalDateTime.now());
         saleRepository.save(sale);
     }
 
     @Override
+    // Lista todas las ventas.
     public List<Sale> getAllSales() {
         return saleRepository.getAllSales();
     }
 
+    // Valida los datos minimos de la venta.
     private void validateSale(Sale sale) {
         if (sale == null) {
             throw new IllegalArgumentException("La venta no es válida.");

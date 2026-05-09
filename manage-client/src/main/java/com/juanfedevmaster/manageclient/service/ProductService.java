@@ -4,14 +4,17 @@ import com.juanfedevmaster.manageclient.model.Product;
 import com.juanfedevmaster.manageclient.repository.IProductRepository;
 import java.util.List;
 
+// Aplica las reglas de negocio de productos.
 public class ProductService implements IProductService {
     private final IProductRepository productRepository;
 
+    // Recibe el repositorio de productos.
     public ProductService(IProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
     @Override
+    // Valida y guarda un producto nuevo.
     public void saveProduct(Product product) {
         validateProduct(product);
 
@@ -24,22 +27,26 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    // Valida y actualiza un producto.
     public void updateProduct(Product product) {
         validateProduct(product);
         productRepository.update(product);
     }
 
     @Override
+    // Elimina un producto por ID.
     public void deleteProduct(int id) {
         productRepository.deleteById(id);
     }
 
     @Override
+    // Lista todos los productos.
     public List<Product> getAllProducts() {
         return productRepository.getAllProducts();
     }
 
     @Override
+    // Verifica que el stock alcance.
     public void validateStockAvailability(Product product, int requestedQuantity) {
         if (product == null) {
             throw new IllegalArgumentException("Debes seleccionar un producto.");
@@ -55,6 +62,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    // Descuenta stock despues de una venta.
     public void subtractStock(Product product, int soldQuantity) {
         // Actualiza el stock despues de validar la cantidad vendida.
         validateStockAvailability(product, soldQuantity);
@@ -62,6 +70,7 @@ public class ProductService implements IProductService {
         productRepository.update(product);
     }
 
+    // Valida los datos minimos del producto.
     private void validateProduct(Product product) {
         if (product == null) {
             throw new IllegalArgumentException("Los datos del producto no son válidos.");
